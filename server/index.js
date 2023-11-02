@@ -7,8 +7,9 @@ import AuthRouter from './routes/auth.route.js'
 
 
 const app = express()
-dotenv.config();
 
+app.use(express.json())
+dotenv.config();
 mongoose.connect(process.env.MONGODB_URL).then(() => {
     console.log("Successfully connected to MONGODB");
 }).catch((err) => {
@@ -19,5 +20,15 @@ app.listen(3000, () => {
     console.log('server is running on port 3000!!')
 })
 
-app.use('/api/user', userRouter)
-app.use('/api/auth', AuthRouter)
+app.use('/api/user', userRouter);
+app.use('/api/auth', AuthRouter);
+
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || "Internal server error"
+    return res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message: message
+    })
+})
