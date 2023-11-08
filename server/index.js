@@ -1,14 +1,18 @@
 import express from "express";
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
 
 import userRouter from './routes/user.route.js'
 import AuthRouter from './routes/auth.route.js'
+import listingRouter from './routes/listing.route.js'
 
 
 const app = express()
 
-app.use(express.json())
+app.use(express.json());
+app.use(cookieParser());
+
 dotenv.config();
 mongoose.connect(process.env.MONGODB_URL).then(() => {
     console.log("Successfully connected to MONGODB");
@@ -25,6 +29,7 @@ app.get("/",(req, res)=> {
 })
 app.use('/api/user', userRouter);
 app.use('/api/auth', AuthRouter);
+app.use('/api/listing', listingRouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

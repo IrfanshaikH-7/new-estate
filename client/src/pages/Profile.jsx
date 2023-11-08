@@ -1,23 +1,67 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { X } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { MoveLeft, Trash2Icon, X } from 'lucide-react'
 import EditUser from '../components/EditUser'
+import { deleteUserFailure, deleteUserSuccess, deleteUserStart, signoutUserFailure, signoutUserStart, signoutUserSuccess } from '../redux/user/userSlice'
+import { toast } from 'sonner'
 
 const Profile = () => {
   const [editUserState, setEditUserState] = useState(false)
   const { currentUser } = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleEditUserClick = () => {
     setEditUserState(true)
 
   }
+
+  const handleDeleteClick = async() => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json();
+      if(data.success === false){
+        dispatch(deleteUserFailure(data.message));
+        return
+      }
+      dispatch(deleteUserSuccess(data))
+      toast('User has been deleted')
+      
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
+    }
+  }
+  const handleSignoutClick = async() => {
+    try {
+      dispatch(signoutUserStart());
+      const res = await fetch('/api/auth/signout');
+      const data = await res.json()
+      if(data.success === false){
+        dispatch(signoutUserFailure(data.message))
+        return
+      }
+
+      dispatch(signoutUserSuccess(data));
+      toast.success("user logged out successfully")
+
+    } catch (error) {
+      dispatch(signoutUserFailure(error.message));
+      
+    }
+  }
   return (
     <>
       <main className='relative h-screen w-full p-2'>
 
-        <div className='h-72 lg:h-96 w-full bg-[#121212] rounded-lg'></div>
-        <section className='flex flex-col justify-center items-center max-w-2xl mx-auto gap-0.5'>
-          <img src={currentUser.avatar} alt="Profile" className='h-28 w-28 rounded-full border-white border-[6px] aspect-square object-cover -mt-14 cursor-pointer' />
+        <div className='h-72 lg:h-96 w-full bg-[#121212] rounded-lg px-4 py-2'> <MoveLeft className='h-10 w-10 bg-white text-black p-2 rounded-full cursor-pointer' onClick={()=> navigate('/')}/> </div>
+        <div className='py-2 w-full'><div onClick={handleDeleteClick} className='py-2 px-6 w-fit  hover:bg-red-600/20 ml-auto rounded-lg transition-all duration-300 flex justify-center items-center text-xs text-red-600 gap-0.5 cursor-pointer'>Delete account <Trash2Icon className=' h-5 w-5 text-red-600'/></div></div>
+        <section className='flex flex-col justify-center items-center max-w-2xl mx-auto gap-0.5 -mt-24'>
+          <img src={currentUser.avatar} alt="Profile" className='h-32 w-32 rounded-full border-white border-[6px] aspect-square object-cover  cursor-pointer' />
+          
           <h4 className='text-black font-semibold text-xl'>{currentUser.username}</h4>
         </section>
 
@@ -25,13 +69,14 @@ const Profile = () => {
           <div className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer' onClick={handleEditUserClick}>
             Edit user
           </div>
-          <div className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer'>
-            Delete A/c
+          <div onClick={() => navigate('/listing')} className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer'>
+            Add listing
           </div>
-          <div className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer'>
+          <div onClick={handleSignoutClick} className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer'>
             Sign out
           </div>
         </section>
+        
 
         {
           editUserState &&
@@ -50,17 +95,3 @@ const Profile = () => {
 }
 
 export default Profile
-{/* <main className='relative h-screen w-full p-2 bg-red-700'>
-        <div className='h-72 lg:h-96 w-full bg-[#121212] rounded-lg'></div>
-        <form className='flex flex-col justify-center items-center max-w-2xl mx-auto gap-4'>
-          <img src={currentUser.avatar} alt="Profile" className='h-28 w-28 rounded-full border-white border-[6px] aspect-square object-cover -mt-14 cursor-pointer'/>
-          <div className='bg-[#121212] rounded-lg px-3 py-1 text-white' onClick={handleEditUserClick}>Edit user</div>
-        </form>
-
-        {
-          editUserState &&
-          <div className='h-72 w-72 bg-orange-600 absolute'>
-
-          </div>
-        }
-      </main> */}
