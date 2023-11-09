@@ -6,6 +6,7 @@ import About from "./pages/About"
 import Profile from "./pages/Profile"
 import Header from "./components/Header"
 import PrivateRoute from "./components/PrivateRoute"
+import CreateLising from "./pages/CreateLising"
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/about" element={ <About />} />
             <Route element={<PrivateRoute />} >
               <Route path="/profile" element={ <Profile />} />
+              <Route path="create-listing" element={<CreateLising />} />
             </Route>
           </Routes>
       </BrowserRouter>

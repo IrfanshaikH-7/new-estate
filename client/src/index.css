@@ -5,11 +5,19 @@
 
 
 html {
-    font-family: 'Tilt Neon', sans-serif;;
+    font-family: 'Tilt Neon', sans-serif;
+    ;
 }
-#root{
+
+#root {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
     position: relative;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

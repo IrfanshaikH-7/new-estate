@@ -69,7 +69,7 @@ const Profile = () => {
           <div className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer' onClick={handleEditUserClick}>
             Edit user
           </div>
-          <div onClick={() => navigate('/listing')} className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer'>
+          <div onClick={() => navigate('/create-listing')} className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer'>
             Add listing
           </div>
           <div onClick={handleSignoutClick} className='bg-[#121212] text-white text-sm px-4 py-2 w-28 text-center  rounded-lg cursor-pointer'>
