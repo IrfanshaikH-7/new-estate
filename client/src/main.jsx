@@ -11,7 +11,13 @@ import { Toaster } from 'sonner'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-    <Toaster />
+    <Toaster position="top-right" dir='ltr' expand 
+    visibleToasts={9} offset='60px'
+    toastOptions={{
+      style: { background: '#121212', color:'white', border: 'black', },
+      className:'bg-[#121212] text-white',
+    }}
+    />
     <App />
     </PersistGate>
   </Provider>,
