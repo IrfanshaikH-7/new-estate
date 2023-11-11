@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Loader2, Loader2Icon, MoveLeft, Trash2Icon, TrashIcon } from 'lucide-react'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
-import { useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from "react-redux"
 
 import { app } from '../firebase'
 import { toast } from 'sonner'
 
-const CreateLising = () => {
+const UpdateListing = () => {
     const [files, setfiles] = useState([])
     const [error, setError] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -28,12 +28,26 @@ const CreateLising = () => {
         furnished: false
 
     });
-    const Iref = useRef(null)
+    const Iref = useRef(null);
+    const params = useParams();
     const navigate = useNavigate()
     const { currentUser } = useSelector( (state) => state.user)
     console.log(data);
 
 
+    useEffect(() => {
+        const fetchListing = async()=> {
+            const listingId = params.listingId;
+            const response = await fetch( `/api/listing/getlisting/${listingId}`);
+            const dataa = await response.json();
+            if(dataa === false){
+                console.log("error :", error.message)
+            }
+            console.log(dataa)
+            setData(dataa)
+        }
+        fetchListing();
+    },[])
     const handleImageUpload = (e) => {
         setUploading(true)
         if (files.length > 0 && files.length < 7) {
@@ -127,7 +141,7 @@ const CreateLising = () => {
         e.preventDefault();
         try {
             setFormUploading(true);
-            const res = await fetch('/api/listing/create', {
+            const res = await fetch(`/api/listing/update/${params.listingId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -144,13 +158,13 @@ const CreateLising = () => {
                 setFormUploading(false);
             }
             setFormUploading(false);
-            navigate(`/listing/${resData._id}`)
-
+            navigate(`/listing/${resData._id}`);
         } catch (error) {
             toast.error('Something went wrong', error.message)
             setFormUploading(false);
             setError(error.message)
         }
+
     }
         return (
 
@@ -158,7 +172,7 @@ const CreateLising = () => {
                 <section className='lg:h-screen h-full flex w-full bg-gradient-to-b  from-slate-300 from-90% to-90% to-white justify-end items-end'>
                     <div className='h-screen hidden lg:flex w-3/12 rounded-br-3xl bg-slate-300'></div>
                     <div className='bg-white h-5/6 w-full  rounded-tl-3xl py-6 px-4 mt-24 lg:mt-0'>
-                        <h1 className=' -ml-4 text-xl font-semibold pl-20 pr-4 py-2 bg-[#121212] w-fit text-white rounded-r-lg z-10 absolute'>Add your listing</h1>
+                        <h1 className=' -ml-4 text-xl font-semibold pl-20 pr-4 py-2 bg-[#121212] w-fit text-white rounded-r-lg z-10 absolute'>Update your listing</h1>
                         <form onSubmit={handleFormSubmit} className=' h-full flex p-1 flex-col lg:flex-row relative  py-12'>
                             <section className='flex flex-col gap-2 flex-1 p-12 md:justify-center lg:justify-start mx-auto w-full sm:max-w-lg lg:max-w-md xl:max-w-lg  '>
                                 <input type="text" id='name' placeholder="Name" maxLength='62' minLength='8' required
@@ -283,7 +297,7 @@ const CreateLising = () => {
                                 </div>
                                 <div className='h-auto w-full  grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 flex-wrap gap-2 md:justify-start justify-center  p-2'>
                                     {
-                                        data.images.map((url, idx) => (
+                                        data.images?.map((url, idx) => (
                                             <div key={url} className='relative border-2 border-slate-300 h-min p-2 rounded-lg flex justify-center items-center peer aspect-video'>
                                                 <img src={url} alt="img" className='  aspect-video object-cover rounded-lg' />
                                                 <Trash2Icon className=' w-12 p-1 text-red-600 bg-red-300/75 font-semibold rounded-l-lg absolute top-4 right-2 cursor-pointer'
@@ -295,7 +309,7 @@ const CreateLising = () => {
                                 </div>
                             </section>
                             <button className=' flex justify-center items-center gap-1 text-xl font-semibold absolute z-10 bottom-12 right-0 -mr-4 pr-40 pl-4 py-2 rounded-l-lg bg-[#121212] text-white'>
-                                {FormUploading ? <Loader2Icon className='h-4 w-4 animate-spin'/> : "Create Listing" }
+                                {FormUploading ? <Loader2Icon className='h-4 w-4 animate-spin'/> : "Update Listing" }
                             </button>
                             <p>{error}</p>
                         </form>
@@ -308,4 +322,4 @@ const CreateLising = () => {
         )
     }
 
-    export default CreateLising
+    export default UpdateListing
