@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Edit, LucideTrash2, MoveLeft, Trash2Icon, X } from 'lucide-react'
 import EditUser from '../components/EditUser'
@@ -72,15 +72,15 @@ const Profile = () => {
 
   }, []);
 
-  const handleDeleteListingClick = async(listingId)=> {
+  const handleDeleteListingClick = async (listingId) => {
     console.log(listingId)
-    const res = await fetch(`/api/listing/delete/${listingId}`, { method: 'DELETE'});
+    const res = await fetch(`/api/listing/delete/${listingId}`, { method: 'DELETE' });
     const data = await res.json()
-    if(data.success === false){
+    if (data.success === false) {
       toast.error("failed to delete listing.")
     }
 
-    setListingState((prev) => prev.filter((listing) => listing._id !== listingId ));
+    setListingState((prev) => prev.filter((listing) => listing._id !== listingId));
     toast.success("Listing has been deleted")
   }
 
@@ -112,21 +112,25 @@ const Profile = () => {
         <section className='h-auto w-auto px-8 py-12 max-w-fit xl:max-w-6xl mx-auto grid grid-cols-2  lg:grid-cols-3 gap-2 '>
           {
             listingState.length > 0 && (
-              
+
               listingState.map((listing) => (
                 <div key={listing._id} className='relative h-fit border-2 w-fit aspect flex flex-col items-center justify-center group rounded-lg overflow-hidden'>
-                  <img src={listing.images[0]} alt="listing-img" className='aspect-video h-28 sm:h-36 lg:h-40  xl:h-48 object-cover  rounded-t-lg' />
+                  <Link to={`/listing/${listing?._id}`} className='h-full w-full'>
+                    <img src={listing.images[0]} alt="listing-img" className='aspect-video h-28 sm:h-36 lg:h-40  xl:h-48 object-cover  rounded-t-lg' />
+                  </Link>
                   <div className='h-full w-full space-y-1 py-1'>
-                    <p className='text-slate-800 text-base'>{listing.name}</p>
+                    <Link to={`/listing/${listing?._id}`}>
+                      <p className='text-slate-800 text-base'>{listing.name}</p>
+                    </Link>
                     <p className='text-base'><span className='line-through text-slate-800 text-sm'>${listing.regularPrice} /</span>{' '}${listing.discountedPrice}</p>
                   </div>
                   <div className='absolute hidden group-hover:flex justify-between items-center top-0 right-0 gap-3 px-4 py-2 bg-[#212121] opa rounded-lg m-1'>
-                      <LucideTrash2 className='h-4 w-4 text-white opacity-80 hover:opacity-100 cursor-pointer'
+                    <LucideTrash2 className='h-4 w-4 text-white opacity-80 hover:opacity-100 cursor-pointer'
                       onClick={() => handleDeleteListingClick(listing._id)}
-                      />
-                      <Edit className='h-4 w-4 text-white opacity-80 hover:opacity-100 cursor-pointer'
-                      onClick={()=> navigate(`/update-listing/${listing._id}`)}
-                      />
+                    />
+                    <Edit className='h-4 w-4 text-white opacity-80 hover:opacity-100 cursor-pointer'
+                      onClick={() => navigate(`/update-listing/${listing._id}`)}
+                    />
                   </div>
                 </div>
               ))

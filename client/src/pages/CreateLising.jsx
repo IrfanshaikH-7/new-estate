@@ -171,7 +171,7 @@ const CreateLising = () => {
                                     onChange={handleChange}
                                     value={data.address}
                                 />
-                                <textarea rows={6} type="text" id='description' placeholder="Description" maxLength='62' minLength='8' required
+                                <textarea rows={6} type="text" id='description' placeholder="Description" minLength='8' required
                                     className='border py-1 px-4 rounded-lg text-base w-full appearance-none resize-none'
                                     onChange={handleChange}
                                     value={data.description}
