@@ -122,7 +122,7 @@ const Profile = () => {
                     <Link to={`/listing/${listing?._id}`}>
                       <p className='text-slate-800 text-base'>{listing.name}</p>
                     </Link>
-                    <p className='text-base'><span className='line-through text-slate-800 text-sm'>${listing.regularPrice} /</span>{' '}${listing.discountedPrice}</p>
+                    <p className='text-base'><span className='line-through text-slate-800 text-sm'>${listing.regularPrice} </span>/{' '}${listing.discountedPrice}</p>
                   </div>
                   <div className='absolute hidden group-hover:flex justify-between items-center top-0 right-0 gap-3 px-4 py-2 bg-[#212121] opa rounded-lg m-1'>
                     <LucideTrash2 className='h-4 w-4 text-white opacity-80 hover:opacity-100 cursor-pointer'

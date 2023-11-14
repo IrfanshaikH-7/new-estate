@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import React from "react";
+import { Link2Icon, Move3D, MoveVertical } from "lucide-react";
 
 const Carousel = ({ images }) => {
     !images ? "" :
@@ -79,12 +80,15 @@ const Carousel = ({ images }) => {
     <div className="imgslider object-contain w-full lg:w-[95%] mx-auto">
         <Slider {...settings} swipeToSlide={true} draggable={true} className="w-full mx-auto" dots={false} arrows={false}>
             {images && images.map((item) => (
-                <div key={item}>
+                <div key={item} className="relative">
+                    <div className="h-16 w-16 bg-white absolute z-50 rounded-3xl top-10 right-10 justify-center items-center"><Link2Icon className="text-slate-700 h-full w-full p-5" /></div>
                     <img
                         src={item}
                         alt='img'
                         className="h-72 sm:h-96  md:h-[580px] w-full object-cover rounded-[50px] p-4"
                     />
+                    
+
                 </div>
             ))}
         </Slider>
