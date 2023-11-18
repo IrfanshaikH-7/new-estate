@@ -31,7 +31,7 @@ const ListingPage = () => {
             <div className='h-full pt-16 '>
                 <Carousel images={listingData.images} />
                 <section className='flex flex-col md:flex-row h-full w-[95%] mx-auto  relative'>
-                    <div className='md:w-3/5 h-96 w-full px-4 md:pr-24'>
+                    <div className='md:w-3/5  h-full w-full px-4 md:pr-24'>
                         <div className='flex justify-between'>
                             <div className='flex gap-2 items-center'>
                                 <h3 className='text-3xl font-semibold'>{listingData.name}</h3>
