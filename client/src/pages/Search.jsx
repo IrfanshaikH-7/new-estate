@@ -7,6 +7,7 @@ const SearchPage = () => {
   const [checkboxState, setCheckboxState] = useState(false)
   const [loading, setLoading] = useState(false)
   const [listings, setListings] = useState([])
+  const [showMore, setShowMore] = useState(false)
 
   const [searchData, setSearchData] = useState({
     searchTerm: '',
@@ -90,6 +91,11 @@ const SearchPage = () => {
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`)
         const data = await res.json()
+        if (data.length > 8) {
+          setShowMore(true)
+        }else {
+          setShowMore(false)
+        }
         setListings(data)
         setLoading(false)
       } catch (error) {
@@ -101,142 +107,170 @@ const SearchPage = () => {
 
 
   }, [location.search])
+
+  const handleShowMoreClick = async () => {
+    const numberOfListing = listings.length;
+    const startIndex = numberOfListing;
+    const urlParams = new URLSearchParams(location.search)
+    urlParams.set('startIndex', startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([ ...listings, ...data ]);
+  }
   return (
-    <main className='h-full w-full relative px-4 flex gap-4'>
-      <section className=' h-fit lg:w-1/3 relative ' >
-        <div className='mt-20 xl:px-8 w-1/3 px-2 rounded-lg hidden lg:flex fixed'>
-          <form onClick={handleSubmit} className=' h-fit flex flex-col py-4 gap-2 justify-center w-full'>
-            <div className='relative h-fit w-full '>
-              <input
-                type="text"
-                id='searchTerm'
-                placeholder='Search...'
-                className='py-3 px-4 border border-[#121212] rounded-lg w-full '
-                value={searchData.searchTerm}
-                onChange={handleChange}
-              />
-              <button type='submit' className='absolute bg-[#121212] right-1 top-[5.5px] px-2 rounded-lg hover:bg-neutral-800'>
-                <Search className='text-white p-3 h-10 w-10 ' />
-              </button>
-            </div>
-            <section className='flex gap-2 '>
-              <div className='h-fit w-fit space-y-6 '>
-                <section className='flex flex-wrap gap-4'>
-
-                  <div className='flex items-center gap-2 h-fit'>
-                    <input ref={checkboxRef} type="checkbox" id='all'
-                      className='w-6 h-6 rounded-lg'
-                      checked={searchData.type === 'all'}
-                      onChange={handleChange}
-                    />
-                    <span>type</span>
-                  </div>
-
-                  <div className='flex items-center gap-2 h-fit'>
-                    <input ref={checkboxRef} type="checkbox" id='rent'
-                      className='w-6 h-6 rounded-lg'
-                      checked={searchData.type === 'rent'}
-                      onChange={handleChange}
-                    />
-                    <span>rent</span>
-                  </div>
-
-                  <div className='flex items-center gap-2 h-fit'>
-                    <input ref={checkboxRef} type="checkbox" id='sell'
-                      className='w-6 h-6 rounded-lg'
-                      checked={searchData.type === 'sell'}
-                      onChange={handleChange}
-                    />
-                    <span>sell</span>
-                  </div>
-
-                  <div className='flex items-center gap-2 h-fit'>
-                    <input ref={checkboxRef} type="checkbox" id='offer'
-                      className='w-6 h-6 rounded-lg'
-                      checked={searchData.offer === true}
-                      onChange={handleChange}
-                    />
-                    <span>offer</span>
-                  </div>
-                </section>
-                <section className='flex flex-wrap gap-4'>
-
-                  <div className='flex items-center gap-2 h-fit'>
-                    <input ref={checkboxRef} type="checkbox" id='furnished'
-                      className='w-6 h-6 rounded-lg'
-                      checked={searchData.furnished === true}
-                      onChange={handleChange}
-                    />
-                    <span>furnished</span>
-                  </div>
-
-                  <div className='flex items-center gap-2 h-fit'>
-                    <input ref={checkboxRef} type="checkbox" id='parking'
-                      className='w-6 h-6 rounded-lg'
-                      checked={searchData.parking === true}
-                      onChange={handleChange}
-                    />
-                    <span>parking</span>
-                  </div>
-
-
-                </section>
-                <div className='h-full w-full flex justify-start items-center'>
-                  <select id="sort_order"
-                    className='bg-white border border-neutral-700 rounded-lg p-3 '
-                    onChange={handleChange}
-                    defaultValue={'create_at_desc'}
-                  >
-                    <option value="regularPrice_desc">Price high to low</option>
-                    <option value="regularPrice_asc">Price low to high</option>
-                    <option value="createdAt_desc">Latest</option>
-                    <option value="createdAt_asc">Oldest</option>
-                  </select>
-                </div>
-              </div>
-
-            </section>
-
-
-
-          </form>
-        </div>
-      </section>
-
-      <section className='lg:w-2/3 w-full self-end justify-self-end ml-auto py-20 px-4'>
-        {
-          !loading && listings && (
-            listings.map((listing) => (
-              
-              <div key={listing._id} className='border rounded-lg overflow-hidden w-96 '>
-                <Link to={`/listing/${listing._id}`} className=''>
-                <img src={listing.images[0]} alt="listing-cover"
-                  className='w-full aspect-video'
+    <main className='h-full w-full '>
+      <div className='h-full w-full relative px-4 flex gap-4'>
+        <section className=' h-fit lg:w-1/3 relative ' >
+          <div className='mt-20 xl:px-8 w-1/3 px-2 rounded-lg hidden lg:flex fixed'>
+            <form onClick={handleSubmit} className=' h-fit flex flex-col py-4 gap-2 justify-center w-full'>
+              <div className='relative h-fit w-full '>
+                <input
+                  type="text"
+                  id='searchTerm'
+                  placeholder='Search...'
+                  className='py-3 px-4 border border-[#121212] rounded-lg w-full '
+                  value={searchData.searchTerm}
+                  onChange={handleChange}
                 />
-                <div className='px-2 mt-2'>
-                  <p className='font-semibold' >{listing.name}</p>
-                  <div className='flex '>
-                    <MapPin className='h-4 w-4 fill-black text-white' />
-                    <span className='text-xs truncate text-neutral-700'>{listing.address}</span>
-                  </div>
-                  <p className='py-2 text-sm text-neutral-800'><span className='line-clamp-2 '> {listing.description} </span></p>
-                  <div className='flex h-full items-center justify-between  pb-4'>
-                    <div className='flex w-fit space-x-1'>
-                    <p className='p-4 rounded-lg bg-neutral-100 text-neutral-800'>{listing.bedrooms}{" "}beds</p>
-                    <p className='p-4 rounded-lg bg-neutral-100 text-neutral-800'>{listing.bathrooms}{" "}baths</p>
-                    </div>
-                    <div className='h-full flex items-center justify-center bg-neutral-100 p-4 rounded-lg'>
-                    <p className='h-full w-full'><span className='text-sm line-through text-red-500'>${listing.regularPrice.toLocaleString("en-US")}</span>/${listing.discountedPrice.toLocaleString("en-US")}</p>
+                <button type='submit' className='absolute bg-[#121212] right-1 top-[5.5px] px-2 rounded-lg hover:bg-neutral-800'>
+                  <Search className='text-white p-3 h-10 w-10 ' />
+                </button>
+              </div>
+              <section className='flex gap-2 '>
+                <div className='h-fit w-fit space-y-6 '>
+                  <section className='flex flex-wrap gap-4'>
 
+                    <div className='flex items-center gap-2 h-fit'>
+                      <input ref={checkboxRef} type="checkbox" id='all'
+                        className='w-6 h-6 rounded-lg'
+                        checked={searchData.type === 'all'}
+                        onChange={handleChange}
+                      />
+                      <span>type</span>
                     </div>
+
+                    <div className='flex items-center gap-2 h-fit'>
+                      <input ref={checkboxRef} type="checkbox" id='rent'
+                        className='w-6 h-6 rounded-lg'
+                        checked={searchData.type === 'rent'}
+                        onChange={handleChange}
+                      />
+                      <span>rent</span>
+                    </div>
+
+                    <div className='flex items-center gap-2 h-fit'>
+                      <input ref={checkboxRef} type="checkbox" id='sell'
+                        className='w-6 h-6 rounded-lg'
+                        checked={searchData.type === 'sell'}
+                        onChange={handleChange}
+                      />
+                      <span>sell</span>
+                    </div>
+
+                    <div className='flex items-center gap-2 h-fit'>
+                      <input ref={checkboxRef} type="checkbox" id='offer'
+                        className='w-6 h-6 rounded-lg'
+                        checked={searchData.offer === true}
+                        onChange={handleChange}
+                      />
+                      <span>offer</span>
+                    </div>
+                  </section>
+                  <section className='flex flex-wrap gap-4'>
+
+                    <div className='flex items-center gap-2 h-fit'>
+                      <input ref={checkboxRef} type="checkbox" id='furnished'
+                        className='w-6 h-6 rounded-lg'
+                        checked={searchData.furnished === true}
+                        onChange={handleChange}
+                      />
+                      <span>furnished</span>
+                    </div>
+
+                    <div className='flex items-center gap-2 h-fit'>
+                      <input ref={checkboxRef} type="checkbox" id='parking'
+                        className='w-6 h-6 rounded-lg'
+                        checked={searchData.parking === true}
+                        onChange={handleChange}
+                      />
+                      <span>parking</span>
+                    </div>
+
+
+                  </section>
+                  <div className='h-full w-full flex justify-start items-center'>
+                    <select id="sort_order"
+                      className='bg-white border border-neutral-700 rounded-lg p-3 '
+                      onChange={handleChange}
+                      defaultValue={'create_at_desc'}
+                    >
+                      <option value="regularPrice_desc">Price high to low</option>
+                      <option value="regularPrice_asc">Price low to high</option>
+                      <option value="createdAt_desc">Latest</option>
+                      <option value="createdAt_asc">Oldest</option>
+                    </select>
                   </div>
                 </div>
-                </Link>
-              </div>
-            ))
-          )
-        }
-      </section>
+
+              </section>
+
+
+
+            </form>
+          </div>
+        </section>
+
+        <section className='lg:w-2/3 w-full self-end justify-self-end ml-auto py-20 px-4 '>
+          <div className='grid md:grid-cols-2  gap-8'>
+            {
+              !loading && listings && (
+                listings.map((listing) => (
+
+                  <div key={listing._id} className='border rounded-lg overflow-hidden  '>
+                    <Link to={`/listing/${listing._id}`} className=''>
+                      <img src={listing.images[0]} alt="listing-cover"
+                        className='w-full aspect-video'
+                      />
+                      <div className='px-2 mt-2'>
+                        <p className='font-semibold' >{listing.name}</p>
+                        <div className='flex '>
+                          <MapPin className='h-4 w-4 fill-black text-white' />
+                          <span className='text-xs truncate text-neutral-700'>{listing.address}</span>
+                        </div>
+                        <p className='py-2 text-sm text-neutral-800'><span className='line-clamp-2 '> {listing.description} </span></p>
+                        <div className='flex h-full items-center justify-between  pb-4'>
+                          <div className='flex w-fit space-x-1'>
+                            <p className='p-2 md:p-4 rounded-lg bg-neutral-100 text-neutral-800'>{listing.bedrooms}{" "}beds</p>
+                            <p className='p-2 md:p-4 rounded-lg bg-neutral-100 text-neutral-800'>{listing.bathrooms}{" "}baths</p>
+                          </div>
+                          <div className='h-full flex items-center justify-center bg-neutral-100 p-4 rounded-lg'>
+                            <p className='h-full w-full'><span className='text-sm line-through text-red-500'>${listing.regularPrice.toLocaleString("en-US")}</span>/${listing.discountedPrice.toLocaleString("en-US")}</p>
+
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))
+              )
+            }
+          </div>
+
+          {
+             showMore && (
+              <div className='w-fit mx-auto py-8'>
+                <button onClick={handleShowMoreClick} className='text-[#121212] font-semibold text-xl text-center'>Show more</button>
+              </div>  
+            )
+          }
+        </section>
+      </div>
+
     </main>
 
   )
