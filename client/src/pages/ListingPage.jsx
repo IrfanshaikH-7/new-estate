@@ -31,7 +31,7 @@ const ListingPage = () => {
             <div className='h-full pt-16 '>
                 <Carousel images={listingData.images} />
                 <section className='flex flex-col md:flex-row h-full w-[95%] mx-auto  relative'>
-                    <div className='md:w-3/5  h-full w-full px-4 md:pr-24'>
+                    <div className='md:w-3/5  h-full w-full px-4 lg:pr-20'>
                         <div className='flex justify-between'>
                             <div className='flex gap-2 items-center'>
                                 <h3 className='text-3xl font-semibold'>{listingData.name}</h3>
@@ -46,11 +46,11 @@ const ListingPage = () => {
                         <p className='text-lg bg-black text-white px-4 py-1 my-1 rounded-md font-semibold w-28 text-center'>{listingData.type}</p>
 
                         <p className='text-slate-800 mt-4 '><span className='font-semibold'>Decription :</span>{" "}{listingData.description}</p>
-                        <div className='flex justify-between py-8'>
-                            <div className='h-[60px] md:h-28  aspect-video rounded-3xl bg-black'></div>
-                            <div className='h-[60px] md:h-28  aspect-video rounded-3xl bg-black'></div>
-                            <div className='h-[60px] md:h-28  aspect-video rounded-3xl bg-black'></div>
-                            <div className='h-[60px] md:h-28  aspect-video rounded-3xl bg-black'></div>
+                        <div className='flex justify-start py-8 flex-wrap gap-0.5'>
+                            <div className='h-[60px] md:h-16 xl:h-24  aspect-video rounded-3xl bg-black'></div>
+                            <div className='h-[60px] md:h-16 xl:h-24  aspect-video rounded-3xl bg-black'></div>
+                            <div className='h-[60px] md:h-16 xl:h-24  aspect-video rounded-3xl bg-black'></div>
+                            <div className=' hidden lg:flex h-[60px] md:h-16 xl:h-24  aspect-video rounded-3xl bg-black'></div>
                         </div>
 
                     </div>

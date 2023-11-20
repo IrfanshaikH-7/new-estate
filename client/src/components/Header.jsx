@@ -177,7 +177,7 @@ const Header = () => {
       </header>
       {
         isMobile && (
-          <div className='w-96 z-50 h-full absolute translate-x-0 bg-white p-4 '>
+          <div className='w-96 z-50 h-full fixed translate-x-0 bg-white p-4 top-0'>
             <X className='h-4 w-4 ml-auto text-black p-0.5 border rounded-lg' onClick={() => setIsMobile(false)} />
 
             <section className='mt-12'>

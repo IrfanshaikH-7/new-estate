@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { LocateIcon, MapPin, Search } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { LocateIcon, Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import ListingItem from '../components/ListingItem';
 
 const SearchPage = () => {
   const navigate = useNavigate();
-  const [checkboxState, setCheckboxState] = useState(false)
   const [loading, setLoading] = useState(false)
   const [listings, setListings] = useState([])
   const [showMore, setShowMore] = useState(false)
@@ -19,8 +19,8 @@ const SearchPage = () => {
     order: 'desc'
 
   })
-  const checkboxRef = useRef();
 
+  console.log(searchData);
   const handleChange = (e) => {
     if (e.target.id === 'all' || e.target.id === 'rent' || e.target.id === 'sell') {
       setSearchData({ ...searchData, type: e.target.id })
@@ -50,7 +50,6 @@ const SearchPage = () => {
     urlParams.set('offer', searchData.offer)
     urlParams.set('order', searchData.order)
     urlParams.set('sort', searchData.sort)
-
     const searchQuery = urlParams.toString();
 
     navigate(`/search?${searchQuery}`)
@@ -59,12 +58,13 @@ const SearchPage = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermURL = urlParams.get('searchTerm');
-    const typeFromUrl = urlParams.get('type');
-    const parkingFromUrl = urlParams.get('parking')
-    const furnishedFromUrl = urlParams.get('furnished')
-    const offerFromUrl = urlParams.get('offer')
-    const sortFromUrl = urlParams.get('sort')
-    const orderFromUrl = urlParams.get('order')
+    const typeFromUrl =  urlParams.get('type');
+    const parkingFromUrl = urlParams.get('parking');
+    const furnishedFromUrl = urlParams.get('furnished');
+    const offerFromUrl = urlParams.get('offer');
+    const sortFromUrl = urlParams.get('sort');
+    const orderFromUrl = urlParams.get('order');
+    
 
     if (
       searchTermURL ||
@@ -146,7 +146,7 @@ const SearchPage = () => {
                   <section className='flex flex-wrap gap-4'>
 
                     <div className='flex items-center gap-2 h-fit'>
-                      <input ref={checkboxRef} type="checkbox" id='all'
+                      <input type="checkbox" id='all'
                         className='w-6 h-6 rounded-lg'
                         checked={searchData.type === 'all'}
                         onChange={handleChange}
@@ -155,7 +155,7 @@ const SearchPage = () => {
                     </div>
 
                     <div className='flex items-center gap-2 h-fit'>
-                      <input ref={checkboxRef} type="checkbox" id='rent'
+                      <input type="checkbox" id='rent'
                         className='w-6 h-6 rounded-lg'
                         checked={searchData.type === 'rent'}
                         onChange={handleChange}
@@ -164,7 +164,7 @@ const SearchPage = () => {
                     </div>
 
                     <div className='flex items-center gap-2 h-fit'>
-                      <input ref={checkboxRef} type="checkbox" id='sell'
+                      <input type="checkbox" id='sell'
                         className='w-6 h-6 rounded-lg'
                         checked={searchData.type === 'sell'}
                         onChange={handleChange}
@@ -173,7 +173,7 @@ const SearchPage = () => {
                     </div>
 
                     <div className='flex items-center gap-2 h-fit'>
-                      <input ref={checkboxRef} type="checkbox" id='offer'
+                      <input type="checkbox" id='offer'
                         className='w-6 h-6 rounded-lg'
                         checked={searchData.offer === true}
                         onChange={handleChange}
@@ -184,7 +184,7 @@ const SearchPage = () => {
                   <section className='flex flex-wrap gap-4'>
 
                     <div className='flex items-center gap-2 h-fit'>
-                      <input ref={checkboxRef} type="checkbox" id='furnished'
+                      <input type="checkbox" id='furnished'
                         className='w-6 h-6 rounded-lg'
                         checked={searchData.furnished === true}
                         onChange={handleChange}
@@ -193,7 +193,7 @@ const SearchPage = () => {
                     </div>
 
                     <div className='flex items-center gap-2 h-fit'>
-                      <input ref={checkboxRef} type="checkbox" id='parking'
+                      <input type="checkbox" id='parking'
                         className='w-6 h-6 rounded-lg'
                         checked={searchData.parking === true}
                         onChange={handleChange}
@@ -229,33 +229,12 @@ const SearchPage = () => {
           <div className='grid md:grid-cols-2  gap-8'>
             {
               !loading && listings && (
-                listings.map((listing) => (
+                listings.map((listing, i) => (
+                  <div key={listing._id}>
+                 <ListingItem listing={listing} />
 
-                  <div key={listing._id} className='border rounded-lg overflow-hidden  '>
-                    <Link to={`/listing/${listing._id}`} className=''>
-                      <img src={listing.images[0]} alt="listing-cover"
-                        className='w-full aspect-video'
-                      />
-                      <div className='px-2 mt-2'>
-                        <p className='font-semibold' >{listing.name}</p>
-                        <div className='flex '>
-                          <MapPin className='h-4 w-4 fill-black text-white' />
-                          <span className='text-xs truncate text-neutral-700'>{listing.address}</span>
-                        </div>
-                        <p className='py-2 text-sm text-neutral-800'><span className='line-clamp-2 '> {listing.description} </span></p>
-                        <div className='flex h-full items-center justify-between  pb-4'>
-                          <div className='flex w-fit space-x-1'>
-                            <p className='p-2 md:p-4 rounded-lg bg-neutral-100 text-neutral-800'>{listing.bedrooms}{" "}beds</p>
-                            <p className='p-2 md:p-4 rounded-lg bg-neutral-100 text-neutral-800'>{listing.bathrooms}{" "}baths</p>
-                          </div>
-                          <div className='h-full flex items-center justify-center bg-neutral-100 p-4 rounded-lg'>
-                            <p className='h-full w-full'><span className='text-sm line-through text-red-500'>${listing.regularPrice.toLocaleString("en-US")}</span>/${listing.discountedPrice.toLocaleString("en-US")}</p>
-
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
                   </div>
+
                 ))
               )
             }

@@ -48,7 +48,8 @@ const CreateLising = () => {
                     setfiles([])
                     toast.success("Images uploaded successfully")
                 }).catch((error) => {
-                    setError('You can only send 6 images per lising')
+                    setError(error.message)
+                    console.log(error)
 
                 })
             }
@@ -171,7 +172,7 @@ const CreateLising = () => {
                                     onChange={handleChange}
                                     value={data.address}
                                 />
-                                <textarea rows={6} type="text" id='description' placeholder="Description" minLength='8' required
+                                <textarea rows={8} type="text" id='description' placeholder="Description" minLength='100' required
                                     className='border py-1 px-4 rounded-lg text-base w-full appearance-none resize-none'
                                     onChange={handleChange}
                                     value={data.description}
@@ -241,7 +242,7 @@ const CreateLising = () => {
 
                                 <div className='flex flex-col gap-4 w-full mt-4 sm:max-w-lg lg:max-w-md xl:max-w-lg'>
                                     <div className='space-x-2 flex'>
-                                        <input type="number" id='regularPrice' min='20' max='999999' required
+                                        <input type="number" id='regularPrice' min='20' max='9999999999' required
                                             className='border p-2 rounded-lg text-base w-28 text-center
                                     [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none
                                     '
@@ -256,7 +257,7 @@ const CreateLising = () => {
                                     </div>
 
                                     <div className='space-x-2 flex'>
-                                        <input type="number" id='discountedPrice' min='5' max='99999' required
+                                        <input type="number" id='discountedPrice' min='5' max='999999999' required
                                             className='border p-2 rounded-lg text-base w-28 text-center
                                     [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none
                                     '

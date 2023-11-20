@@ -16,6 +16,7 @@ const Carousel = ({ images }) => {
         lazyLoad: true,
         autoplay: true,
         autoplaySpeed: 2000,
+        focusOnSelect: false
     };
   return (
     <>
