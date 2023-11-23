@@ -137,12 +137,12 @@ const Home = () => {
           </div>
 
           {/* Rent listings */}
-          <div  className='h-full w-full  space-y-1 px-8'>
+          <div  className='h-full w-full  space-y-1'>
              <div className='flex justify-between items-center p-2 border border-neutral-400 rounded-lg'>
                 <h1 className='text-3xl font-semibold py-2'>For rents</h1>
                 <Link to='/search?type=rent' className='text-base p-2 bg-[#121212] text-white rounded-lg hover:bg-white hover:text-black'>explore more</Link>
               </div> 
-            <div className='h-full flex md:flex-row flex-col gap-6'>
+            <div className='h-full flex md:flex-row flex-col gap-6 px-8'>
               {
                 rentState && (
                   rentState.map((rentlisting) => (
@@ -161,7 +161,7 @@ const Home = () => {
                 <h1 className='text-4xl font-semibold py-2'>For sale</h1>
                 <Link to='/search?type=sell' className='text-base p-2 bg-[#121212] text-white rounded-lg hover:bg-white hover:text-black'>explore more</Link>
               </div> 
-            <div className='h-full flex md:flex-row flex-col gap-6'>
+            <div className='h-full flex md:flex-row flex-col gap-6 px-8'>
               {
                 sellState && (
                   sellState.map((sellisting) => (
